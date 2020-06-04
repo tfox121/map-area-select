@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { Segment, Button } from "semantic-ui-react";
 
-function App() {
+import './App.css'
+
+import DrawMap from './DrawMap'
+import DisplayMap from './DisplayMap'
+import LeafletDrawMap from './LeafletDrawMap'
+
+const App = () => {
+  const [savedPolygons, setSavedPolygons] = useState({})
+  const areaPolygons = {}
+
+  const handleDrawCreate = (layer)=> {
+    console.log(layer)
+    areaPolygons[layer._leaflet_id] = layer
+    console.log(areaPolygons)
+  }
+
+  const handleClick = (evt) => {
+    evt.preventDefault()
+    setSavedPolygons(areaPolygons)
+  }
+
+  useEffect(() => {
+    console.log(savedPolygons)
+  }, [savedPolygons])
+
+  const renderCoords = () => {
+    if (savedPolygons) {
+      const polygonArray = Object.values(savedPolygons)
+      return (
+        <ol>
+          {polygonArray.map(layerObj => {
+            return (
+              <li key={layerObj._leaflet_id}>
+                {layerObj._latlngs.join(' || ')}
+              </li>
+            )
+          })}
+        </ol>
+      )
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Segment className="map-container">
+      <LeafletDrawMap handleDrawCreate={handleDrawCreate} />
+      <Button onClick={handleClick}>Submit Coordinates!</Button>
+      <Segment>
+        {renderCoords()}
+      </Segment>
+      <DisplayMap />
+    </Segment>
   );
-}
+};
 
 export default App;
