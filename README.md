@@ -1,4 +1,4 @@
-##3 basic maps to demonstrate:
+## 3 basic maps to demonstrate:
 1) Drawable polygons with edit and delete functionality. Overlapping
 vectors prohibited. Polygons saved in state and displayed on right side.
 
