@@ -1,11 +1,14 @@
 .map-container {
-  width: 80%;
-  height: 900px;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 50%;
+  display: block;
 }
 
 button.ui.button {
   margin-top: 20px;
   padding-bottom: 20px;
+}
+
+.buyer-display-map .leaflet-grab {
+  cursor: crosshair;
 }

@@ -5,8 +5,6 @@ import {
 } from 'react-leaflet';
 import L from 'leaflet';
 
-// work around broken icons when using webpack, see https://github.com/PaulLeCam/react-leaflet/issues/255
-
 delete L.Icon.Default.prototype.getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'marker-icon.png',
@@ -16,8 +14,6 @@ L.Icon.Default.mergeOptions({
 
 const BuyerDisplayMap = (props) => {
   const { coords, handleMarkerPlace, savedPolygons } = props;
-
-  // see http://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html#l-draw-event for leaflet-draw events doc
 
   let editableFG = null;
 
@@ -73,8 +69,5 @@ const BuyerDisplayMap = (props) => {
     </Map>
   );
 };
-
-// data taken from the example in https://github.com/PaulLeCam/react-leaflet/issues/176
-
 
 export default BuyerDisplayMap;

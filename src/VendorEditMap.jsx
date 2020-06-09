@@ -6,15 +6,6 @@ import {
 import L from 'leaflet';
 import { EditControl } from 'react-leaflet-draw';
 
-// work around broken icons when using webpack, see https://github.com/PaulLeCam/react-leaflet/issues/255
-
-delete L.Icon.Default.prototype.getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'marker-icon.png',
-  iconUrl: 'marker-icon.png',
-  shadowUrl: 'marker-shadow.png',
-});
-
 const LeafletDisplayMap = (props) => {
   const { savedPolygons, onChange } = props;
 
@@ -42,7 +33,6 @@ const LeafletDisplayMap = (props) => {
     }
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   const _onChange = () => {
     // editableFG contains the edited geometry, which can be manipulated through the leaflet API
 
@@ -61,7 +51,6 @@ const LeafletDisplayMap = (props) => {
 
   const onCreated = (e) => {
     const type = e.layerType;
-    const { layer } = e;
     console.log('onCreated: something else created:', type, e);
     // Do whatever else you need to. (save to db; etc)
 
@@ -78,26 +67,6 @@ const LeafletDisplayMap = (props) => {
     _onChange();
   };
 
-  const onMounted = (drawControl) => {
-    console.log('onMounted', drawControl);
-  };
-
-  const onEditStart = (e) => {
-    console.log('onEditStart', e);
-  };
-
-  const onEditStop = (e) => {
-    console.log('onEditStop', e);
-  };
-
-  const onDeleteStart = (e) => {
-    console.log('onDeleteStart', e);
-  };
-
-  const onDeleteStop = (e) => {
-    console.log('onDeleteStop', e);
-  };
-
   return (
     <Map center={[53.4808, -2.2426]} zoom={13} zoomControl={false}>
       <TileLayer
@@ -110,11 +79,6 @@ const LeafletDisplayMap = (props) => {
           onEdited={onEdited}
           onCreated={onCreated}
           onDeleted={onDeleted}
-          onMounted={onMounted}
-          onEditStart={onEditStart}
-          onEditStop={onEditStop}
-          onDeleteStart={onDeleteStart}
-          onDeleteStop={onDeleteStop}
           draw={{
             rectangle: false,
             circle: false,
@@ -134,8 +98,5 @@ const LeafletDisplayMap = (props) => {
     </Map>
   );
 };
-
-// data taken from the example in https://github.com/PaulLeCam/react-leaflet/issues/176
-
 
 export default LeafletDisplayMap;

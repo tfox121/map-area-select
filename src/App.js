@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import {
-  Segment, Button,
+  Segment, Header, Grid,
 } from 'semantic-ui-react';
 import * as d3 from 'd3';
 
@@ -17,8 +17,6 @@ const App = () => {
   const [coords, setCoords] = useState([]);
 
   const handleMarkerPlace = (latlng) => {
-    // const { lat, lng } = layer._latlng;
-    // console.log(layer);
     setCoords(latlng);
   };
 
@@ -27,21 +25,12 @@ const App = () => {
     setSavedPolygons(change);
   };
 
-  const polygonSubmit = (evt) => {
-    evt.preventDefault();
-  };
-
-  const coordsSubmit = (evt) => {
-    evt.preventDefault();
-  };
-
-  const polygonsContainCoords = (polygonsObj, latlng) => {
+  const checkPolygonsContainCoords = (polygonsObj, latlng) => {
     const { lat, lng } = latlng;
     let contains = false;
     if (d3.geoContains(polygonsObj, [lng, lat])) {
       contains = true;
     }
-
     return contains;
   };
 
@@ -51,7 +40,7 @@ const App = () => {
 
   useEffect(() => {
     if (coords.lat && Object.keys(savedPolygons).length !== 0) {
-      console.log(polygonsContainCoords(savedPolygons, coords));
+      console.log(checkPolygonsContainCoords(savedPolygons, coords));
     }
   }, [coords, savedPolygons]);
 
@@ -73,16 +62,31 @@ const App = () => {
 
   return (
     <Segment className="map-container">
-      <VendorDrawMap onChange={handleChange} />
-      <Button onClick={polygonSubmit}>Submit Coordinates!</Button>
       <Segment>
-        {renderCoords()}
+        <Grid columns={2} divided>
+          <Grid.Row>
+            <Grid.Column>
+              <Header>Vendor setup phase draw map:</Header>
+              <VendorDrawMap onChange={handleChange} />
+              <Header>Vendor dashboard edit:</Header>
+              <VendorEditMap savedPolygons={savedPolygons} onChange={handleChange} />
+            </Grid.Column>
+            <Grid.Column>
+              <Header>Saved polygons:</Header>
+              {renderCoords()}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Segment>
-      <VendorEditMap savedPolygons={savedPolygons} onChange={handleChange} />
-      <Button onClick={polygonSubmit}>Submit Coordinates!</Button>
-      <BuyerDisplayMap savedPolygons={savedPolygons} coords={coords} handleMarkerPlace={handleMarkerPlace} />
-      <Button onClick={coordsSubmit}>Check Location</Button>
-
+      <Segment className="buyer-display-map">
+        <Header>Customer location selection:</Header>
+        <BuyerDisplayMap savedPolygons={savedPolygons} coords={coords} handleMarkerPlace={handleMarkerPlace} />
+        <Segment>
+          <Header>Is the marker within a polygon?</Header>
+          { coords.lat && Object.keys(savedPolygons).length !== 0
+          && <div>{checkPolygonsContainCoords(savedPolygons, coords).toString()}</div>}
+        </Segment>
+      </Segment>
     </Segment>
   );
 };
